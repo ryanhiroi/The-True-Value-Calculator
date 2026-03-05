@@ -244,6 +244,14 @@
             background-color: #15803D;
         }
 
+        .privacy-notice {
+            font-size: 0.8rem;
+            color: #64748B;
+            text-align: center;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
         #custom-toast {
             visibility: hidden;
             min-width: 250px;
@@ -345,6 +353,8 @@
                 <span data-i18n="checkbox_lbl">Yes, I still want to buy this item. It's totally worth it!</span>
             </label>
             <button onclick="submitDecision()" class="submit-btn" data-i18n="btn_submit">Submit Decision</button>
+            
+            <p class="privacy-notice" data-i18n="privacy_notice">🔒 Privacy Notice: We only record your final decision and the number of calculations made. No specific numbers, prices, or personal data are stored.</p>
         </div>
 
     </div>
@@ -405,6 +415,7 @@
                 verdict_desc: "Now that you have seen the real numbers...",
                 checkbox_lbl: "Yes, I still want to buy this item. It's totally worth it!",
                 btn_submit: "Submit Decision",
+                privacy_notice: "🔒 Privacy Notice: We only record your final decision and the number of calculations made. No specific numbers, prices, or personal data are stored.",
                 toast_msg: "Your decision has been recorded! Thank you.",
                 err_msg: "Please enter valid numbers!",
                 res_hours_1: "You need to work ",
@@ -436,6 +447,7 @@
                 verdict_desc: "Vậy giờ bạn đã nhìn thấy những con số thực tế...",
                 checkbox_lbl: "Tôi vẫn muốn mua. Nó hoàn toàn xứng đáng!",
                 btn_submit: "Chốt Quyết Định",
+                privacy_notice: "🔒 Lưu ý Bảo mật: Hệ thống chỉ lưu lại quyết định cuối cùng và số lượng phép toán bạn đã dùng. Không có bất kỳ con số, giá tiền, hay dữ liệu cá nhân nào được lưu trữ.",
                 toast_msg: "Quyết định của bạn đã được ghi nhận! Cảm ơn bạn.",
                 err_msg: "Vui lòng nhập các con số hợp lệ!",
                 res_hours_1: "Bạn cần làm việc ",
