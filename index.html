@@ -353,17 +353,20 @@
 
     <script>
         const firebaseConfig = {
-        apiKey: "AIzaSyCru1CWsu3Cjv044k7lghtCh-Rb4KEPQXo",
-        authDomain: "thetruevaluecalculator.firebaseapp.com",
-        databaseURL: "https://thetruevaluecalculator-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "thetruevaluecalculator",
-        storageBucket: "thetruevaluecalculator.firebasestorage.app",
-        messagingSenderId: "267606331056",
-        appId: "1:267606331056:web:4c8334661f59940c233575"
-};
+            apiKey: "AIzaSyCru1CWsu3Cjv044k7lghtCh-Rb4KEPQXo",
+            authDomain: "thetruevaluecalculator.firebaseapp.com",
+            databaseURL: "https://thetruevaluecalculator-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "thetruevaluecalculator",
+            storageBucket: "thetruevaluecalculator.firebasestorage.app",
+            messagingSenderId: "267606331056",
+            appId: "1:267606331056:web:4c8334661f59940c233575"
+        };
 
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
+
+        let currentLang = 'en';
+        let calculationCount = 0;
 
         function formatInput(element) {
             let value = element.value.replace(/[^\d]/g, '');
@@ -413,7 +416,7 @@
             },
             vi: {
                 title: "Công Cụ Tính Giá Trị Thực",
-                subtitle: "Hãy suy nghĩ kỹ trước khi chốt đơn. Tìm ra được chi phí thực sự của những mong muốn.",
+                subtitle: "Hãy suy nghĩ kỹ trước khi chốt đơn. Tìm ra được chi phí thực sự cho những mong muốn của bạn.",
                 card1_title: "⏱️ Quy Đổi Số Giờ Làm Việc",
                 card1_desc: "Tìm hiểu xem bạn đang đánh đổi bao nhiêu giờ trong cuộc đời cho món đồ này.",
                 price_lbl: "Giá món đồ (VND)",
@@ -443,8 +446,6 @@
                 res_cpd_2: " mỗi ngày."
             }
         };
-
-        let currentLang = 'en';
 
         function toggleLanguage() {
             const isChecked = document.getElementById('lang-switch').checked;
@@ -482,6 +483,8 @@
                 return;
             }
 
+            calculationCount++;
+
             const hours = (price / wage).toFixed(1);
             resultDiv.style.display = 'block';
             resultDiv.style.color = 'var(--text-main)';
@@ -500,6 +503,8 @@
                 resultDiv.innerText = dict.err_msg;
                 return;
             }
+
+            calculationCount++;
 
             const costPerUse = Math.round(price / uses);
             resultDiv.style.display = 'block';
@@ -520,6 +525,8 @@
                 return;
             }
 
+            calculationCount++;
+
             const costPerDay = Math.round(price / days);
             resultDiv.style.display = 'block';
             resultDiv.style.color = 'var(--text-main)';
@@ -532,6 +539,7 @@
 
             database.ref('statistics').push({
                 decision: userDecision,
+                calculationsPerformed: calculationCount,
                 timestamp: new Date().toLocaleString('vi-VN')
             }).then(() => {
                 const toast = document.getElementById("custom-toast");
