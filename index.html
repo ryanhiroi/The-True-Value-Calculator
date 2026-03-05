@@ -16,6 +16,25 @@
             --card-bg: #FFFFFF;
             --text-main: #1E293B;
             --text-muted: #64748B;
+            --input-border: #CBD5E1;
+            --card-border: #E2E8F0;
+            --verdict-bg: #F0FDF4;
+            --verdict-border: #BBF7D0;
+            --verdict-text: #166534;
+        }
+
+        body.dark-mode {
+            --primary-color: #60A5FA;
+            --accent-color: #3B82F6;
+            --bg-color: #0F172A;
+            --card-bg: #1E293B;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --input-border: #334155;
+            --card-border: #334155;
+            --verdict-bg: #064E3B;
+            --verdict-border: #065F46;
+            --verdict-text: #A7F3D0;
         }
         
         body {
@@ -28,6 +47,7 @@
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .container {
@@ -40,12 +60,22 @@
             position: relative;
         }
 
-        .lang-toggle-container {
+        .top-controls {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: center;
-            gap: 10px;
             margin-bottom: -10px;
+            width: 100%;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .icon-label {
+            font-size: 1.1rem;
         }
 
         .lang-label {
@@ -62,8 +92,8 @@
         .switch {
             position: relative;
             display: inline-block;
-            width: 50px;
-            height: 26px;
+            width: 46px;
+            height: 24px;
         }
 
         .switch input { 
@@ -84,8 +114,8 @@
         .slider:before {
             position: absolute;
             content: "";
-            height: 20px;
-            width: 20px;
+            height: 18px;
+            width: 18px;
             left: 3px;
             bottom: 3px;
             background-color: white;
@@ -99,7 +129,7 @@
         }
 
         input:checked + .slider:before {
-            transform: translateX(24px);
+            transform: translateX(22px);
         }
 
         .header {
@@ -112,12 +142,14 @@
             color: var(--primary-color);
             margin: 0 0 8px 0;
             line-height: 1.2;
+            transition: color 0.3s;
         }
 
         .header p {
             color: var(--text-muted);
             font-size: 0.95rem;
             margin: 0;
+            transition: color 0.3s;
         }
 
         .card {
@@ -125,16 +157,18 @@
             padding: 24px;
             border-radius: 16px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            border: 1px solid #E2E8F0;
+            border: 1px solid var(--card-border);
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
         h2 {
             margin-top: 0;
             font-size: 1.2rem;
             color: var(--primary-color);
-            border-bottom: 2px solid #F1F5F9;
+            border-bottom: 2px solid var(--card-border);
             padding-bottom: 12px;
             margin-bottom: 16px;
+            transition: color 0.3s, border-color 0.3s;
         }
 
         .input-group {
@@ -146,18 +180,21 @@
             margin-bottom: 8px;
             font-size: 0.9rem;
             font-weight: 600;
-            color: #334155;
+            color: var(--text-main);
+            transition: color 0.3s;
         }
 
         input[type="text"] {
             width: 100%;
             padding: 12px;
-            border: 1px solid #CBD5E1;
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--input-border);
             border-radius: 8px;
             font-size: 1rem;
             box-sizing: border-box;
             outline: none;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, background-color 0.3s, color 0.3s;
         }
 
         input[type="text"]:focus {
@@ -169,29 +206,40 @@
             width: 100%;
             padding: 14px;
             background-color: var(--primary-color);
-            color: white;
+            color: #FFFFFF;
             border: none;
             border-radius: 8px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s, color 0.3s;
         }
 
         button:hover {
-            background-color: #1E293B;
+            background-color: var(--accent-color);
+        }
+
+        /* Chỉnh riêng nút Submit để luôn màu xanh lá */
+        .submit-btn {
+            background-color: #16A34A !important;
+            color: white !important;
+        }
+
+        .submit-btn:hover {
+            background-color: #15803D !important;
         }
 
         .result {
             margin-top: 16px;
             padding: 16px;
-            background-color: #EFF6FF;
+            background-color: var(--bg-color);
             border-radius: 8px;
             text-align: center;
             font-size: 1.05rem;
-            color: var(--primary-color);
+            color: var(--text-main);
             display: none;
-            border: 1px solid #BFDBFE;
+            border: 1px solid var(--card-border);
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
         }
 
         .result span.highlight {
@@ -203,13 +251,13 @@
         }
 
         .verdict-card {
-            background-color: #F0FDF4;
-            border-color: #BBF7D0;
+            background-color: var(--verdict-bg);
+            border-color: var(--verdict-border);
         }
 
         .verdict-card h2 {
-            color: #166534;
-            border-bottom-color: #DCFCE7;
+            color: var(--verdict-text);
+            border-bottom-color: var(--verdict-border);
         }
 
         .checkbox-container {
@@ -232,24 +280,18 @@
         .checkbox-container span {
             font-size: 1rem;
             font-weight: 500;
-            color: #166534;
+            color: var(--verdict-text);
             line-height: 1.4;
-        }
-
-        .submit-btn {
-            background-color: #16A34A;
-        }
-
-        .submit-btn:hover {
-            background-color: #15803D;
+            transition: color 0.3s;
         }
 
         .privacy-notice {
             font-size: 0.8rem;
-            color: #64748B;
+            color: var(--text-muted);
             text-align: center;
             margin-top: 15px;
             font-style: italic;
+            transition: color 0.3s;
         }
 
         #custom-toast {
@@ -283,13 +325,24 @@
 
     <div class="container">
         
-        <div class="lang-toggle-container">
-            <span class="lang-label active" id="lbl-en">EN</span>
-            <label class="switch">
-                <input type="checkbox" id="lang-switch" onchange="toggleLanguage()">
-                <span class="slider"></span>
-            </label>
-            <span class="lang-label" id="lbl-vi">VI</span>
+        <div class="top-controls">
+            <div class="toggle-container">
+                <span class="icon-label">☀️</span>
+                <label class="switch">
+                    <input type="checkbox" id="theme-switch" onchange="toggleTheme()">
+                    <span class="slider"></span>
+                </label>
+                <span class="icon-label">🌙</span>
+            </div>
+
+            <div class="toggle-container">
+                <span class="lang-label active" id="lbl-en">EN</span>
+                <label class="switch">
+                    <input type="checkbox" id="lang-switch" onchange="toggleLanguage()">
+                    <span class="slider"></span>
+                </label>
+                <span class="lang-label" id="lbl-vi">VI</span>
+            </div>
         </div>
 
         <div class="header">
@@ -339,7 +392,7 @@
             </div>
             <div class="input-group">
                 <label for="estimated-days" data-i18n="days_lbl">Estimated Lifespan (Days)</label>
-                <input type="text" inputmode="numeric" id="estimated-days" placeholder="e.g., 365" oninput="formatInput(this)">
+                <input type="text" inputmode="numeric" id="estimated-days" placeholder="e.g., 730" oninput="formatInput(this)">
             </div>
             <button onclick="calculateCPD()" data-i18n="btn_cpd">Calculate Cost Per Day</button>
             <div id="result-cpd" class="result"></div>
@@ -347,7 +400,7 @@
 
         <div class="card verdict-card">
             <h2 data-i18n="verdict_title">🤔 The Final Verdict</h2>
-            <p style="font-size: 0.85rem; color: #15803D; margin-bottom: 16px;" data-i18n="verdict_desc">Now that you have seen the real numbers...</p>
+            <p style="font-size: 0.85rem; color: var(--verdict-text); margin-bottom: 16px; transition: color 0.3s;" data-i18n="verdict_desc">Now that you have seen the real numbers...</p>
             <label class="checkbox-container">
                 <input type="checkbox" id="buy-decision">
                 <span data-i18n="checkbox_lbl">Yes, I still want to buy this item. It's totally worth it!</span>
@@ -377,6 +430,15 @@
 
         let currentLang = 'en';
         let calculationCount = 0;
+
+        function toggleTheme() {
+            const isDark = document.getElementById('theme-switch').checked;
+            if (isDark) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        }
 
         function formatInput(element) {
             let value = element.value.replace(/[^\d]/g, '');
@@ -429,7 +491,7 @@
                 title: "Công Cụ Tính Giá Trị Thực",
                 subtitle: "Hãy suy nghĩ kỹ trước khi chốt đơn. Tìm ra được chi phí thực sự cho những mong muốn của bạn.",
                 card1_title: "⏱️ Quy Đổi Số Giờ Làm Việc",
-                card1_desc: "Tìm xem bạn đang đánh đổi bao nhiêu giờ trong cuộc đời cho món đồ này.",
+                card1_desc: "Tìm hiểu xem bạn đang đánh đổi bao nhiêu giờ trong cuộc đời cho món đồ này.",
                 price_lbl: "Giá món đồ (VND)",
                 price_lbl2: "Giá món đồ (VND)",
                 price_lbl3: "Giá món đồ (VND)",
@@ -440,7 +502,7 @@
                 uses_lbl: "Số lần sử dụng dự kiến",
                 btn_cpu: "Tính Phí Mỗi Lần Dùng",
                 card3_title: "📅 Tính Phí Hao Mòn Mỗi Ngày",
-                card3_desc: "Tính phí mà bạn phải trả để sở hữu món đồ này mỗi ngày",
+                card3_desc: "Tính toán mức phí hàng ngày để sở hữu món đồ này.",
                 days_lbl: "Số ngày",
                 btn_cpd: "Tính Phí Mỗi Ngày",
                 verdict_title: "🤔 Quyết Định Cuối Cùng",
