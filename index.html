@@ -33,6 +33,69 @@
             flex-direction: column;
             gap: 20px;
             padding-bottom: 40px;
+            position: relative;
+        }
+
+        .lang-toggle-container {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: -10px;
+        }
+
+        .lang-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: color 0.3s;
+        }
+
+        .lang-label.active {
+            color: var(--primary-color);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #CBD5E1;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
         }
 
         .header {
@@ -82,7 +145,7 @@
             color: #334155;
         }
 
-        input[type="number"] {
+        input[type="text"] {
             width: 100%;
             padding: 12px;
             border: 1px solid #CBD5E1;
@@ -93,7 +156,7 @@
             transition: border-color 0.2s;
         }
 
-        input[type="number"]:focus {
+        input[type="text"]:focus {
             border-color: var(--accent-color);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
         }
@@ -135,7 +198,6 @@
             margin: 4px 0;
         }
 
-        /* Checkbox & Submit styling */
         .verdict-card {
             background-color: #F0FDF4;
             border-color: #BBF7D0;
@@ -178,7 +240,6 @@
             background-color: #15803D;
         }
 
-        /* Toast Notification Styling */
         #custom-toast {
             visibility: hidden;
             min-width: 250px;
@@ -210,138 +271,257 @@
 
     <div class="container">
         
+        <div class="lang-toggle-container">
+            <span class="lang-label active" id="lbl-en">EN</span>
+            <label class="switch">
+                <input type="checkbox" id="lang-switch" onchange="toggleLanguage()">
+                <span class="slider"></span>
+            </label>
+            <span class="lang-label" id="lbl-vi">VI</span>
+        </div>
+
         <div class="header">
-            <h1>The True Value Calculator</h1>
-            <p>Think twice before you swipe. Discover the actual cost of your desires.</p>
+            <h1 data-i18n="title">The True Value Calculator</h1>
+            <p data-i18n="subtitle">Think twice before you swipe. Discover the actual cost of your desires.</p>
         </div>
 
         <div class="card">
-            <h2>⏱️ Hours-to-Earn Converter</h2>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Find out exactly how many hours of your life you are trading for this item.</p>
+            <h2 data-i18n="card1_title">⏱️ Hours-to-Earn Converter</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;" data-i18n="card1_desc">Find out exactly how many hours of your life you are trading for this item.</p>
             
             <div class="input-group">
-                <label for="item-price-1">Item Price (VND)</label>
-                <input type="number" id="item-price-1" placeholder="e.g., 500000">
+                <label for="item-price-1" data-i18n="price_lbl">Item Price (VND)</label>
+                <input type="text" inputmode="numeric" id="item-price-1" placeholder="e.g., 500 000" oninput="formatInput(this)">
             </div>
             <div class="input-group">
-                <label for="hourly-wage">Your Hourly Wage (VND)</label>
-                <input type="number" id="hourly-wage" placeholder="e.g., 25000">
+                <label for="hourly-wage" data-i18n="wage_lbl">Your Hourly Wage (VND)</label>
+                <input type="text" inputmode="numeric" id="hourly-wage" placeholder="e.g., 25 000" oninput="formatInput(this)">
             </div>
-            <button onclick="calculateHours()">Calculate Hours</button>
+            <button onclick="calculateHours()" data-i18n="btn_hours">Calculate Hours</button>
             <div id="result-hours" class="result"></div>
         </div>
 
         <div class="card">
-            <h2>👟 Cost-Per-Use Calculator</h2>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Determine the value you get every time you use or wear this item.</p>
+            <h2 data-i18n="card2_title">👟 Cost-Per-Use Calculator</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;" data-i18n="card2_desc">Determine the value you get every time you use or wear this item.</p>
             
             <div class="input-group">
-                <label for="item-price-2">Item Price (VND)</label>
-                <input type="number" id="item-price-2" placeholder="e.g., 1500000">
+                <label for="item-price-2" data-i18n="price_lbl2">Item Price (VND)</label>
+                <input type="text" inputmode="numeric" id="item-price-2" placeholder="e.g., 1 500 000" oninput="formatInput(this)">
             </div>
             <div class="input-group">
-                <label for="estimated-uses">Estimated Number of Uses</label>
-                <input type="number" id="estimated-uses" placeholder="e.g., 100">
+                <label for="estimated-uses" data-i18n="uses_lbl">Estimated Number of Uses</label>
+                <input type="text" inputmode="numeric" id="estimated-uses" placeholder="e.g., 100" oninput="formatInput(this)">
             </div>
-            <button onclick="calculateCPU()">Calculate Cost Per Use</button>
+            <button onclick="calculateCPU()" data-i18n="btn_cpu">Calculate Cost Per Use</button>
             <div id="result-cpu" class="result"></div>
         </div>
 
         <div class="card">
-            <h2>📅 Cost-Per-Day Calculator</h2>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Calculate the daily subscription fee of owning this item over its lifespan.</p>
+            <h2 data-i18n="card3_title">📅 Cost-Per-Day Calculator</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;" data-i18n="card3_desc">Calculate the daily subscription fee of owning this item over its lifespan.</p>
             
             <div class="input-group">
-                <label for="item-price-3">Item Price (VND)</label>
-                <input type="number" id="item-price-3" placeholder="e.g., 12000000">
+                <label for="item-price-3" data-i18n="price_lbl3">Item Price (VND)</label>
+                <input type="text" inputmode="numeric" id="item-price-3" placeholder="e.g., 12 000 000" oninput="formatInput(this)">
             </div>
             <div class="input-group">
-                <label for="estimated-days">Estimated Lifespan (Days)</label>
-                <input type="number" id="estimated-days" placeholder="e.g., 730 (for 2 years)">
+                <label for="estimated-days" data-i18n="days_lbl">Estimated Lifespan (Days)</label>
+                <input type="text" inputmode="numeric" id="estimated-days" placeholder="e.g., 730" oninput="formatInput(this)">
             </div>
-            <button onclick="calculateCPD()">Calculate Cost Per Day</button>
+            <button onclick="calculateCPD()" data-i18n="btn_cpd">Calculate Cost Per Day</button>
             <div id="result-cpd" class="result"></div>
         </div>
 
         <div class="card verdict-card">
-            <h2>🤔 The Final Verdict</h2>
-            <p style="font-size: 0.85rem; color: #15803D; margin-bottom: 16px;">Now that you have seen the real numbers...</p>
+            <h2 data-i18n="verdict_title">🤔 The Final Verdict</h2>
+            <p style="font-size: 0.85rem; color: #15803D; margin-bottom: 16px;" data-i18n="verdict_desc">Now that you have seen the real numbers...</p>
             <label class="checkbox-container">
                 <input type="checkbox" id="buy-decision">
-                <span>Yes, I still want to buy this item. It's totally worth it!</span>
+                <span data-i18n="checkbox_lbl">Yes, I still want to buy this item. It's totally worth it!</span>
             </label>
-            <button onclick="submitDecision()" class="submit-btn">Submit Decision</button>
+            <button onclick="submitDecision()" class="submit-btn" data-i18n="btn_submit">Submit Decision</button>
         </div>
 
     </div>
 
-    <div id="custom-toast">Your decision has been recorded! Thank you.</div>
+    <div id="custom-toast" data-i18n="toast_msg">Your decision has been recorded! Thank you.</div>
 
     <script>
+        // --- HÀM TỰ ĐỘNG CÁCH SỐ (THOUSAND SEPARATOR) ---
+        function formatInput(element) {
+            // Lấy giá trị và xóa tất cả ký tự không phải là số (kể cả khoảng trắng cũ)
+            let value = element.value.replace(/[^\d]/g, '');
+            
+            // Thêm khoảng trắng vào mỗi 3 chữ số
+            if (value !== '') {
+                value = parseInt(value, 10).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+            }
+            
+            // Gán lại giá trị đã format cho ô input
+            element.value = value;
+        }
+
+        // --- HÀM LẤY SỐ THỰC TỪ Ô INPUT ---
+        // Vì ô input giờ có chứa dấu cách (VD: "100 000"), ta phải xóa dấu cách đi trước khi tính toán
+        function getNumberValue(elementId) {
+            const rawValue = document.getElementById(elementId).value;
+            const cleanValue = rawValue.replace(/\s/g, ''); // Xóa toàn bộ dấu cách
+            return parseFloat(cleanValue);
+        }
+
+        // --- TỪ ĐIỂN SONG NGỮ (DICTIONARY) ---
+        const translations = {
+            en: {
+                title: "The True Value Calculator",
+                subtitle: "Think twice before you swipe. Discover the actual cost of your desires.",
+                card1_title: "⏱️ Hours-to-Earn Converter",
+                card1_desc: "Find out exactly how many hours of your life you are trading for this item.",
+                price_lbl: "Item Price (VND)",
+                price_lbl2: "Item Price (VND)",
+                price_lbl3: "Item Price (VND)",
+                wage_lbl: "Your Hourly Wage (VND)",
+                btn_hours: "Calculate Hours",
+                card2_title: "👟 Cost-Per-Use Calculator",
+                card2_desc: "Determine the value you get every time you use or wear this item.",
+                uses_lbl: "Estimated Number of Uses",
+                btn_cpu: "Calculate Cost Per Use",
+                card3_title: "📅 Cost-Per-Day Calculator",
+                card3_desc: "Calculate the daily subscription fee of owning this item over its lifespan.",
+                days_lbl: "Estimated Lifespan (Days)",
+                btn_cpd: "Calculate Cost Per Day",
+                verdict_title: "🤔 The Final Verdict",
+                verdict_desc: "Now that you have seen the real numbers...",
+                checkbox_lbl: "Yes, I still want to buy this item. It's totally worth it!",
+                btn_submit: "Submit Decision",
+                toast_msg: "Your decision has been recorded! Thank you.",
+                err_msg: "Please enter valid numbers!",
+                res_hours_1: "You need to work ",
+                res_hours_2: " hours",
+                res_hours_3: " to afford this item.",
+                res_cpu_1: "Each use will cost you approximately ",
+                res_cpd_1: "Owning this costs you ",
+                res_cpd_2: " every single day."
+            },
+            vi: {
+                title: "Công Cụ Tính Giá Trị Thực",
+                subtitle: "Hãy suy nghĩ kỹ trước khi chốt đơn. Tìm ra được chi phí thực sự của những mong muốn.",
+                card1_title: "⏱️ Quy Đổi Số Giờ Làm Việc",
+                card1_desc: "Tìm hiểu xem bạn đang đánh đổi bao nhiêu giờ trong cuộc đời cho món đồ này.",
+                price_lbl: "Giá món đồ (VND)",
+                price_lbl2: "Giá món đồ (VND)",
+                price_lbl3: "Giá món đồ (VND)",
+                wage_lbl: "Lương mỗi giờ của bạn (VND)",
+                btn_hours: "Tính Số Giờ Làm Việc",
+                card2_title: "👟 Tính Phí Mỗi Lần Sử Dụng",
+                card2_desc: "Xác định số tiền bạn thực sự trả cho mỗi lần sử dụng hoặc mặc món đồ này.",
+                uses_lbl: "Số lần sử dụng dự kiến",
+                btn_cpu: "Tính Phí Mỗi Lần Dùng",
+                card3_title: "📅 Tính Phí Hao Mòn Mỗi Ngày",
+                card3_desc: "Tính toán mức phí hàng ngày để sở hữu món đồ này.",
+                days_lbl: "Số ngày",
+                btn_cpd: "Tính Phí Mỗi Ngày",
+                verdict_title: "🤔 Quyết Định Cuối Cùng",
+                verdict_desc: "Vậy giờ bạn đã nhìn thấy những con số thực tế...",
+                checkbox_lbl: "Tôi vẫn muốn mua. Nó hoàn toàn xứng đáng!",
+                btn_submit: "Chốt Quyết Định",
+                toast_msg: "Quyết định của bạn đã được ghi nhận! Cảm ơn bạn.",
+                err_msg: "Vui lòng nhập các con số hợp lệ!",
+                res_hours_1: "Bạn cần làm việc ",
+                res_hours_2: " giờ",
+                res_hours_3: " để mua món đồ này.",
+                res_cpu_1: "Mỗi lần sử dụng sẽ tiêu tốn của bạn khoảng ",
+                res_cpd_1: "Sở hữu món đồ này tiêu tốn của bạn ",
+                res_cpd_2: " mỗi ngày."
+            }
+        };
+
+        let currentLang = 'en';
+
+        function toggleLanguage() {
+            const isChecked = document.getElementById('lang-switch').checked;
+            currentLang = isChecked ? 'vi' : 'en';
+
+            document.getElementById('lbl-en').classList.toggle('active', !isChecked);
+            document.getElementById('lbl-vi').classList.toggle('active', isChecked);
+
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    element.innerText = translations[currentLang][key];
+                }
+            });
+
+            document.getElementById('result-hours').style.display = 'none';
+            document.getElementById('result-cpu').style.display = 'none';
+            document.getElementById('result-cpd').style.display = 'none';
+        }
+
         function formatVND(number) {
             return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number);
         }
 
         function calculateHours() {
-            const price = parseFloat(document.getElementById('item-price-1').value);
-            const wage = parseFloat(document.getElementById('hourly-wage').value);
+            const price = getNumberValue('item-price-1');
+            const wage = getNumberValue('hourly-wage');
             const resultDiv = document.getElementById('result-hours');
+            const dict = translations[currentLang];
 
             if (!price || !wage || wage <= 0) {
                 resultDiv.style.display = 'block';
                 resultDiv.style.color = '#DC2626';
-                resultDiv.innerText = 'Please enter valid numbers!';
+                resultDiv.innerText = dict.err_msg;
                 return;
             }
 
             const hours = (price / wage).toFixed(1);
             resultDiv.style.display = 'block';
             resultDiv.style.color = 'var(--text-main)';
-            resultDiv.innerHTML = `You need to work <span class="highlight">${hours} hours</span> to afford this item.`;
+            resultDiv.innerHTML = `${dict.res_hours_1}<span class="highlight">${hours}${dict.res_hours_2}</span>${dict.res_hours_3}`;
         }
 
         function calculateCPU() {
-            const price = parseFloat(document.getElementById('item-price-2').value);
-            const uses = parseFloat(document.getElementById('estimated-uses').value);
+            const price = getNumberValue('item-price-2');
+            const uses = getNumberValue('estimated-uses');
             const resultDiv = document.getElementById('result-cpu');
+            const dict = translations[currentLang];
 
             if (!price || !uses || uses <= 0) {
                 resultDiv.style.display = 'block';
                 resultDiv.style.color = '#DC2626';
-                resultDiv.innerText = 'Please enter valid numbers!';
+                resultDiv.innerText = dict.err_msg;
                 return;
             }
 
             const costPerUse = Math.round(price / uses);
             resultDiv.style.display = 'block';
             resultDiv.style.color = 'var(--text-main)';
-            resultDiv.innerHTML = `Each use will cost you approximately <span class="highlight">${formatVND(costPerUse)}</span>`;
+            resultDiv.innerHTML = `${dict.res_cpu_1}<span class="highlight">${formatVND(costPerUse)}</span>`;
         }
 
         function calculateCPD() {
-            const price = parseFloat(document.getElementById('item-price-3').value);
-            const days = parseFloat(document.getElementById('estimated-days').value);
+            const price = getNumberValue('item-price-3');
+            const days = getNumberValue('estimated-days');
             const resultDiv = document.getElementById('result-cpd');
+            const dict = translations[currentLang];
 
             if (!price || !days || days <= 0) {
                 resultDiv.style.display = 'block';
                 resultDiv.style.color = '#DC2626';
-                resultDiv.innerText = 'Please enter valid numbers!';
+                resultDiv.innerText = dict.err_msg;
                 return;
             }
 
             const costPerDay = Math.round(price / days);
             resultDiv.style.display = 'block';
             resultDiv.style.color = 'var(--text-main)';
-            resultDiv.innerHTML = `Owning this costs you <span class="highlight">${formatVND(costPerDay)}</span> every single day.`;
+            resultDiv.innerHTML = `${dict.res_cpd_1}<span class="highlight">${formatVND(costPerDay)}</span>${dict.res_cpd_2}`;
         }
 
-        // Logic for Custom Toast Submit Button
         function submitDecision() {
             const toast = document.getElementById("custom-toast");
             toast.className = "show";
             
-            // Đợi 2.5 giây (2500 milliseconds) rồi tự động F5 tải lại trang
             setTimeout(function() {
                 window.location.reload();
             }, 2500);
