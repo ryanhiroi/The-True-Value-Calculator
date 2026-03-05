@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The True Value Calculator</title>
+
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+
     <style>
         :root {
             --primary-color: #0F172A;
@@ -323,7 +327,7 @@
             
             <div class="input-group">
                 <label for="item-price-3" data-i18n="price_lbl3">Item Price (VND)</label>
-                <input type="text" inputmode="numeric" id="item-price-3" placeholder="e.g., 12 000 000" oninput="formatInput(this)">
+                <input type="text" inputmode="numeric" id="item-price-3" placeholder="e.g., 2 000 000" oninput="formatInput(this)">
             </div>
             <div class="input-group">
                 <label for="estimated-days" data-i18n="days_lbl">Estimated Lifespan (Days)</label>
@@ -348,29 +352,33 @@
     <div id="custom-toast" data-i18n="toast_msg">Your decision has been recorded! Thank you.</div>
 
     <script>
-        // --- HÀM TỰ ĐỘNG CÁCH SỐ (THOUSAND SEPARATOR) ---
+        const firebaseConfig = {
+        apiKey: "AIzaSyCru1CWsu3Cjv044k7lghtCh-Rb4KEPQXo",
+        authDomain: "thetruevaluecalculator.firebaseapp.com",
+        databaseURL: "https://thetruevaluecalculator-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "thetruevaluecalculator",
+        storageBucket: "thetruevaluecalculator.firebasestorage.app",
+        messagingSenderId: "267606331056",
+        appId: "1:267606331056:web:4c8334661f59940c233575"
+};
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
         function formatInput(element) {
-            // Lấy giá trị và xóa tất cả ký tự không phải là số (kể cả khoảng trắng cũ)
             let value = element.value.replace(/[^\d]/g, '');
-            
-            // Thêm khoảng trắng vào mỗi 3 chữ số
             if (value !== '') {
                 value = parseInt(value, 10).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
             }
-            
-            // Gán lại giá trị đã format cho ô input
             element.value = value;
         }
 
-        // --- HÀM LẤY SỐ THỰC TỪ Ô INPUT ---
-        // Vì ô input giờ có chứa dấu cách (VD: "100 000"), ta phải xóa dấu cách đi trước khi tính toán
         function getNumberValue(elementId) {
             const rawValue = document.getElementById(elementId).value;
-            const cleanValue = rawValue.replace(/\s/g, ''); // Xóa toàn bộ dấu cách
+            const cleanValue = rawValue.replace(/\s/g, ''); 
             return parseFloat(cleanValue);
         }
 
-        // --- TỪ ĐIỂN SONG NGỮ (DICTIONARY) ---
         const translations = {
             en: {
                 title: "The True Value Calculator",
@@ -519,12 +527,22 @@
         }
 
         function submitDecision() {
-            const toast = document.getElementById("custom-toast");
-            toast.className = "show";
-            
-            setTimeout(function() {
-                window.location.reload();
-            }, 2500);
+            const isBuying = document.getElementById('buy-decision').checked;
+            const userDecision = isBuying ? "Buy" : "Abandon";
+
+            database.ref('statistics').push({
+                decision: userDecision,
+                timestamp: new Date().toLocaleString('vi-VN')
+            }).then(() => {
+                const toast = document.getElementById("custom-toast");
+                toast.className = "show";
+                
+                setTimeout(function() {
+                    window.location.reload();
+                }, 2500);
+            }).catch((error) => {
+                console.error("Error: ", error);
+            });
         }
     </script>
 
